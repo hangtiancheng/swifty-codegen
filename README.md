@@ -35,32 +35,33 @@ Then the conversation continues: ask for changes, click an element in the live p
 
 ## How it works
 
-```text
-            ┌────────────────────────── Browser ──────────────────────────┐
-            │                                                             │
- Prompt ───>│  Chat UI <──── WebSocket transcript / tool events           │
-            │     │                                                       │
-            │     V                                                       │
-            │  WebContainer: mount file tree → npm install → Vite dev   │
-            │     │                                                       │
-            │     V                                                       │
-            │  Live preview (errors & element selection flow back) ───────┼──┐
-            └─────┼───────────────────────────────────────────────────────┘  │
-                  │ GET /api/app/files/:appId                                │
-                  V                                                          │
-            ┌────────────────────────── Server ─────────────────────────┐    │
-            │  Hono API + Agent WebSocket                               │<───┘
-            │     │                                                     │
-            │     V                                                     │
-            │  RuntimeManager → per-app AgentRuntime (Swifty agent)    │
-            │     · tools: ReadFile / WriteFile / EditFile / Bash / …  │
-            │     · MCP · hooks · skills · memory · git snapshots       │
-            │     V                                                     │
-            │  tmp/code_output/{appId}/  ← real project files          │
-            │     │                                                     │
-            │  Prisma ⇄ PostgreSQL · Redis (sessions, rate limit)      │
-            │  Storage: local / MinIO · AI endpoint (OpenAI-compatible) │
-            └───────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    Prompt(["Prompt"])
+
+    subgraph Browser["Browser"]
+        direction TB
+        Chat["Chat UI"]
+        WebContainer["WebContainer<br/>mount file tree → npm install → Vite dev"]
+        Preview["Live preview"]
+    end
+
+    subgraph Server["Server"]
+        direction TB
+        Api["Hono API + Agent WebSocket"]
+        Runtime["RuntimeManager → per-app AgentRuntime (Swifty agent)"]
+        Capabilities["tools: ReadFile / WriteFile / EditFile / Bash / …<br/>MCP · hooks · skills · memory · git snapshots"]
+        Workspace["tmp/code_output/{appId}/ ← real project files"]
+        Infra["Prisma ⇄ PostgreSQL · Redis (sessions, rate limit)<br/>Storage: local / MinIO · AI endpoint (OpenAI-compatible)"]
+
+        Api --> Runtime --> Capabilities --> Workspace --> Infra
+    end
+
+    Prompt --> Chat
+    Chat <-->|"WebSocket transcript / tool events"| Api
+    Chat --> WebContainer --> Preview
+    Preview -.->|"errors & element selection"| Api
+    WebContainer -.->|"GET /api/app/files/:appId"| Api
 ```
 
 ## Tech stack
