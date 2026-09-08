@@ -10,4 +10,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - '@swifty.js/sentry@0.0.7'
-  - '@swifty.js/swifty@0.0.22'
+  - '@swifty.js/swifty@0.0.22 || 0.0.24'
