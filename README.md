@@ -4,7 +4,7 @@
 
 **Describe it. Watch it build itself — right in your browser.**
 
-An AI code-generation platform powered by the [Swifty](https://github.com/hangtiancheng/swifty-cli) coding agent: one prompt becomes a real, runnable web app, written to disk on the server and previewed live inside a WebContainer.
+An AI code-generation platform powered by the [Swifty](https://github.com/hangtiancheng/swifty-code) coding agent: one prompt becomes a real, runnable web app, written to disk on the server and previewed live inside a WebContainer.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A520-5FA04E?logo=node.js&logoColor=white)](https://nodejs.org)
